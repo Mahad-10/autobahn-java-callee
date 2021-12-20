@@ -5,25 +5,26 @@ import io.crossbar.autobahn.wamp.Session;
 import io.crossbar.autobahn.wamp.types.ExitInfo;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
 
 public class Callee {
     public static void main(String[] args) {
-        connect();
+        String url = args[0];
+        String procedure = args[1];
+        connect(url, procedure);
     }
 
-    private static int connect() {
+    private static int connect(String url, String procedure) {
         Session wampSession = new Session();
         wampSession.addOnJoinListener((session, details) -> {
             System.out.println(details);
-            session.register("simplethings", o -> {
+            session.register(procedure, o -> {
                 return "ABU";
             }).whenComplete((registration, throwable) -> {
                 System.out.println("Registered,,,,,");
             });
         });
 
-        Client client = new Client(wampSession, "ws://localhost:8080/ws", "realm1");
+        Client client = new Client(wampSession, url, "realm1");
         CompletableFuture<ExitInfo> exitFuture = client.connect();
 
         try {
