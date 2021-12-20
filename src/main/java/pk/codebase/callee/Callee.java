@@ -8,8 +8,13 @@ import java.util.concurrent.CompletableFuture;
 
 public class Callee {
     public static void main(String[] args) {
-        String url = args[0];
-        String procedure = args[1];
+        String url = "ws://localhost:8080/ws";
+        String procedure = "com.things.echo";
+        try {
+            url = args[0];
+            procedure = args[1];
+        } catch (Exception e) {
+        }
         connect(url, procedure);
     }
 
